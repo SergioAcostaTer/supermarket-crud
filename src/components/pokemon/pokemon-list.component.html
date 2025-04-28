@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="table-container" *ngIf="!selectedPokemon.id">
+    <h2>Productos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>name</th>
+          <th>base_experience</th>
+          <th>height</th>
+          <th>weight</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pokemon of pokemons$ | async">
+          <td>{{ pokemon.id }}</td>
+          <td>{{ pokemon.name }}</td>
+          <td>{{ pokemon.base_experience }}</td>
+          <td>{{ pokemon.height }}</td>
+          <td>{{ pokemon.weight }}</td>
+
+
+          <td>
+            <button class="edit-btn" (click)="editProduct(pokemon)">Editar</button>
+            <button class="delete-btn" (click)="deleteProduct(pokemon.id!)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Panel de Formulario SIEMPRE visible -->
+  <aside class="form-panel">
+    <h3>{{ selectedPokemon.id ? "Editar Producto" : "Nuevo Producto" }}</h3>
+
+    <input
+      type="text"
+      [(ngModel)]="selectedPokemon.name"
+      placeholder="Nombre"
+    />
+    <input
+      type="number"
+      [(ngModel)]="selectedPokemon.base_experience"
+      placeholder="base_experience"
+    />
+    <input
+      type="number"
+      [(ngModel)]="selectedPokemon.height"
+      placeholder="height"
+    />
+    <input
+      type="number"
+      [(ngModel)]="selectedPokemon.weight"
+      placeholder="weight"
+    />
+
+
+    <div class="button-group">
+      <button class="save-btn" (click)="saveProduct()">
+        {{ selectedPokemon.id ? "Actualizar" : "Agregar" }}
+      </button>
+      <button class="cancel-btn" (click)="resetForm()">Cancelar</button>
+    </div>
+  </aside>
+</div>
