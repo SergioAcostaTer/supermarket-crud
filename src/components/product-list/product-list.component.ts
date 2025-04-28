@@ -31,12 +31,10 @@ export class ProductListComponent {
         this.resetForm();
       });
     }
-    // No loadProducts() needed — real-time updates happen automatically
   }
 
   deleteProduct(id: string) {
     this.productService.deleteProduct(id);
-    // No need to reload manually
   }
 
   editProduct(product: Product) {
