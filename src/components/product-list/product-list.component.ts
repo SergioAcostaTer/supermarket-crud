@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Product } from '../../models/product.model';
+import { Observable } from 'rxjs';
+import { emptyProduct, Product } from '../../models/product.model';
 import { ProductService } from '../../services/product.service';
 
 @Component({
@@ -10,20 +11,12 @@ import { ProductService } from '../../services/product.service';
   styleUrls: ['./product-list.component.css'],
   imports: [FormsModule, CommonModule],
 })
-export class ProductListComponent implements OnInit {
-  products: Product[] = [];
-  selectedProduct: Product = { name: '', price: 0, stock: 0, fechas: {} };
+export class ProductListComponent {
+  products$: Observable<Product[]>;
+  selectedProduct: Product = emptyProduct;
 
-  constructor(private productService: ProductService) {}
-
-  ngOnInit() {
-    this.loadProducts();
-  }
-
-  loadProducts() {
-    this.productService
-      .getProducts()
-      .subscribe((products) => (this.products = products));
+  constructor(private productService: ProductService) {
+    this.products$ = this.productService.getProducts();
   }
 
   saveProduct() {
@@ -32,20 +25,18 @@ export class ProductListComponent implements OnInit {
     if (this.selectedProduct.id) {
       this.productService
         .updateProduct(this.selectedProduct.id, this.selectedProduct)
-        .then(() => {
-          this.resetForm();
-          this.loadProducts();
-        });
+        .then(() => this.resetForm());
     } else {
       this.productService.addProduct(this.selectedProduct).then(() => {
         this.resetForm();
-        this.loadProducts();
       });
     }
+    // No loadProducts() needed — real-time updates happen automatically
   }
 
   deleteProduct(id: string) {
-    this.productService.deleteProduct(id).then(() => this.loadProducts());
+    this.productService.deleteProduct(id);
+    // No need to reload manually
   }
 
   editProduct(product: Product) {
@@ -53,6 +44,6 @@ export class ProductListComponent implements OnInit {
   }
 
   resetForm() {
-    this.selectedProduct = { name: '', price: 0, stock: 0, fechas: {} };
+    this.selectedProduct = emptyProduct;
   }
 }

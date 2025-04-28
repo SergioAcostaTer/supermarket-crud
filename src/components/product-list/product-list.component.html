@@ -14,20 +14,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let product of products">
+        <tr *ngFor="let product of products$ | async">
           <td>{{ product.name }}</td>
           <td>{{ product.price }}€</td>
           <td>{{ product.stock }}</td>
           <td>{{ product.description }}</td>
-          <td>{{ product.fechas.caducidad }}</td>
-          <td>{{ product.fechas.fabricacion }}</td>
+          <td>{{ product.fechas?.caducidad }}</td>
+          <td>{{ product.fechas?.fabricacion }}</td>
           <td>
-            <button class="edit-btn" (click)="editProduct(product)">
-              Editar
-            </button>
-            <button class="delete-btn" (click)="deleteProduct(product.id!)">
-              Eliminar
-            </button>
+            <button class="edit-btn" (click)="editProduct(product)">Editar</button>
+            <button class="delete-btn" (click)="deleteProduct(product.id!)">Eliminar</button>
           </td>
         </tr>
       </tbody>
