@@ -212,7 +212,7 @@ service cloud.firestore {
 }
 ```
 
-```
+```ts
 <div class="container">
   <h2>Editar Producto</h2>
 
@@ -242,3 +242,142 @@ service cloud.firestore {
 </div>
 
 ```
+
+## 🧠 Notas útiles Angular + Firestore (para examen)
+
+---
+
+### 🔥 Manejo de Arrays de Objetos en un Modelo
+
+- Para listas dentro de un objeto (`tipos` en `Producto`):
+  - Inicializar siempre en el modelo: `tipos: []`
+  - Cada objeto debe tener `id` único (`crypto.randomUUID()` o `Date.now().toString()`).
+
+```ts
+tipos: [
+  { id: '1', name: 'Bebida' },
+  { id: '2', name: 'Lácteo' }
+]
+```
+
+---
+
+### ✏️ ngModel en Listas (`*ngFor`)
+
+- Puedes usar `[(ngModel)]` directamente sobre propiedades de los objetos dentro de `*ngFor`.
+
+```html
+<li *ngFor="let tipo of selectedProduct.tipos">
+  <input [(ngModel)]="tipo.name" />
+</li>
+```
+
+- Si editas directamente, recuerda que **mutas** el array original.
+
+---
+
+### 🛡️ Cambios en Arrays
+
+- Al modificar arrays (agregar, eliminar, actualizar):
+  - Recomiendo **crear nueva referencia** para forzar el refresco en Angular:
+
+```ts
+this.selectedProduct.tipos = [...this.selectedProduct.tipos];
+```
+
+---
+
+### 🚀 Guardar Datos con Subcolecciones / Arrays
+
+- Firestore guarda arrays de objetos directamente sin problema.
+- No necesitas hacer nada especial para arrays si están bien formados.
+
+```ts
+addDoc(collection(this.firestore, 'products'), {
+  ...this.selectedProduct
+});
+```
+
+---
+
+### 📋 Estructura Básica CRUD Producto (Recordatorio Mental)
+
+- **Modelo:** Definir `Product` y `Type`
+- **Servicio:** Métodos `getProducts()`, `addProduct()`, `updateProduct()`, `deleteProduct()`
+- **Componente:**
+  - Mostrar lista de productos (`*ngFor`)
+  - Formulario de edición (`[(ngModel)]`)
+  - Botones de editar, guardar, eliminar
+
+---
+
+### 🧩 Importaciones necesarias
+
+| Módulo | ¿Para qué? |
+|:---|:---|
+| `FormsModule` | `[(ngModel)]` |
+| `CommonModule` | `*ngIf`, `*ngFor` |
+| `provideFirebaseApp()` | Inicializar Firebase |
+| `provideFirestore()` | Usar Firestore |
+
+---
+
+### ⚠️ Errores comunes a evitar
+
+| Error | Solución |
+|:---|:---|
+| `ngModel` no funciona | Asegurar `FormsModule` importado |
+| Firestore no conecta | Revisar `environment.ts` y `provideFirebaseApp()` |
+| No se actualiza la UI después de cambios | Clonar array con `[...tipos]` |
+| Permisos Firestore | Regla temporal para examen: `allow read, write: if true;` |
+
+---
+
+### 📄 Código express de agregar/eliminar tipo
+
+```ts
+newTipoName: string = '';
+
+addTipo() {
+  if (this.newTipoName.trim()) {
+    this.selectedProduct.tipos.push({
+      id: crypto.randomUUID(),
+      name: this.newTipoName.trim()
+    });
+    this.newTipoName = '';
+  }
+}
+
+removeTipo(id: string) {
+  this.selectedProduct.tipos = this.selectedProduct.tipos.filter(t => t.id !== id);
+}
+```
+
+---
+
+### 🛠️ Buenas prácticas mínimas (para no fallar)
+
+- Iniciar modelos vacíos (`emptyProduct`, `[]` en arrays).
+- Manejar errores con `.catch()` si da tiempo.
+- Confirmar acciones de borrado si se puede (por UX).
+- Usar `console.log()` para debug si algo no aparece.
+
+---
+
+# 🧠 Frases rápidas para acordarme:
+
+- **"Si hay ngModel, importa FormsModule."**
+- **"Si hay datos de Firestore, usa async pipe."**
+- **"Si cambio un array, hago spread [...array]."**
+- **"Siempre inicializo objetos anidados."**
+- **"Firestore guarda arrays y objetos directo."**
+
+---
+
+✅ **Fin de las notas.**  
+🧠 **Listo para hacer CRUD con Firestore y Angular en cualquier momento.**
+
+---
+
+# 📚 (FIN README)
+
