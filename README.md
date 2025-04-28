@@ -211,3 +211,34 @@ service cloud.firestore {
   }
 }
 ```
+
+```
+<div class="container">
+  <h2>Editar Producto</h2>
+
+  <input [(ngModel)]="selectedProduct.name" placeholder="Nombre del Producto" />
+  <input [(ngModel)]="selectedProduct.price" placeholder="Precio" type="number" />
+  <input [(ngModel)]="selectedProduct.stock" placeholder="Stock" type="number" />
+  <input [(ngModel)]="selectedProduct.description" placeholder="Descripción" />
+
+  <h3>Tipos de Producto</h3>
+
+  <!-- Input para agregar nuevo tipo -->
+  <div class="new-tipo-form">
+    <input [(ngModel)]="newTipoName" placeholder="Nuevo tipo..." />
+    <button (click)="addTipo()">Agregar Tipo</button>
+  </div>
+
+  <!-- Lista de tipos existentes -->
+  <ul>
+    <li *ngFor="let tipo of selectedProduct.tipos">
+      <input [(ngModel)]="tipo.name" placeholder="Nombre del tipo" />
+      <button (click)="removeTipo(tipo.id)">Eliminar</button>
+    </li>
+  </ul>
+
+  <!-- Guardar Producto -->
+  <button (click)="saveProduct()">Guardar Producto</button>
+</div>
+
+```
