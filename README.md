@@ -199,3 +199,15 @@ Listo para ampliar con login, roles, filtros o paginación si quieres subir de n
 ---
 
 🎨 Hecho para ayudarte a **aprobar fuerte y entender de verdad.**
+
+
+```txt
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /products/{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+```
