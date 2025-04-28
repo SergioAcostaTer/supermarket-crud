@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
-  Firestore,
   addDoc,
   collection,
   collectionData,
   deleteDoc,
   doc,
+  Firestore,
   updateDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -13,7 +13,7 @@ import { Product } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  constructor(private firestore: Firestore) {}
+  private firestore: Firestore = inject(Firestore);
 
   getProducts(): Observable<Product[]> {
     return collectionData(collection(this.firestore, 'products'), {

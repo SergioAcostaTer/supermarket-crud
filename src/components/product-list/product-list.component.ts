@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { emptyProduct, Product } from '../../models/product.model';
@@ -12,12 +12,9 @@ import { ProductService } from '../../services/product.service';
   imports: [FormsModule, CommonModule],
 })
 export class ProductListComponent {
-  products$: Observable<Product[]>;
   selectedProduct: Product = emptyProduct;
-
-  constructor(private productService: ProductService) {
-    this.products$ = this.productService.getProducts();
-  }
+  productService: ProductService = inject(ProductService);
+  products$: Observable<Product[]> = this.productService.getProducts();
 
   saveProduct() {
     if (!this.selectedProduct.name) return;
